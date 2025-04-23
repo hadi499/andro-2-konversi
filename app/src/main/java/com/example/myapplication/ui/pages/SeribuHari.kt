@@ -13,6 +13,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import java.time.ZoneId
 import java.time.Instant
 import kotlinx.coroutines.delay
@@ -72,7 +75,7 @@ fun SeribuHari() {
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Button(onClick = { showDatePicker = true }) {
                 Text("Pilih Tanggal")
@@ -82,22 +85,36 @@ fun SeribuHari() {
 
             Text(
                 text = "Tanggal dipilih: ${selectedDate.format(dateFormatter)}",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
 
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Klik hitung untuk pencarian 1000 hari",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color(0xFFF14A00)
+            )
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(onClick = { calculateThousandDays() }) {
                 Text("Hitung")
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = if (resultDate.isNotEmpty()) "Tanggal hasil: $resultDate"
-                else "Klik Hitung",
-                style = MaterialTheme.typography.bodyLarge
-            )
+
+            if (resultDate.isNotEmpty()) {
+                Text(
+                    text = resultDate,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Blue
+                    )
+                )
+            }
         }
 
         // Loading indicator
@@ -120,6 +137,7 @@ fun SeribuHari() {
                         selectedDate = Instant.ofEpochMilli(it)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
+                        resultDate = ""
                     }
                     showDatePicker = false
                 }) { Text("OK") }
